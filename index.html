@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LexiVitae Copilot | AI Examiner</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- PDF.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  
+  <!-- TensorFlow.js & COCO-SSD for Client-Side Vision -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+  
+  <!-- SheetJS for Excel Export -->
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+
+  <!-- Fonts: Segoe UI (System), Outfit (Headings), Space Grotesk (Data) -->
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'ms-blue': '#0078D4',
+            'ms-blue-hover': '#106EBE',
+            'ms-dark': '#0f0f0f', 
+            'ms-surface': '#201F1E',
+            'academic-gold': '#FBBF24',
+            'success': '#107C10',
+            'danger': '#D13438',
+            'glass-border': 'rgba(255, 255, 255, 0.08)',
+            'glass-surface': 'rgba(20, 20, 20, 0.6)',
+          },
+          fontFamily: {
+            sans: ['"Segoe UI"', '"Outfit"', 'sans-serif'],
+            mono: ['"Space Grotesk"', 'monospace'],
+            heading: ['"Outfit"', 'sans-serif'],
+          },
+          animation: {
+            'float-slow': 'float 8s ease-in-out infinite',
+            'pulse-glow': 'pulseGlow 3s infinite',
+            'fade-in': 'fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            'scale-in': 'scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
+            'shimmer': 'shimmer 2s linear infinite',
+            'scan': 'scan 3s linear infinite',
+            'flash-green': 'flashGreen 0.5s ease-out forwards',
+            'flash-red': 'flashRed 0.5s ease-out forwards',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            fadeIn: {
+              'from': { opacity: '0', transform: 'translateY(10px) scale(0.98)' },
+              'to': { opacity: '1', transform: 'translateY(0) scale(1)' }
+            },
+            scaleIn: {
+              'from': { opacity: '0', transform: 'scale(0.9)' },
+              'to': { opacity: '1', transform: 'scale(1)' }
+            },
+            shimmer: {
+              '0%': { backgroundPosition: '-200% 0' },
+              '100%': { backgroundPosition: '200% 0' }
+            },
+            scan: {
+              '0%': { top: '-10%', opacity: '0' },
+              '20%': { opacity: '1' },
+              '80%': { opacity: '1' },
+              '100%': { top: '110%', opacity: '0' }
+            },
+            flashGreen: {
+              '0%': { backgroundColor: 'rgba(16, 124, 16, 0)' },
+              '10%': { backgroundColor: 'rgba(16, 124, 16, 0.3)' },
+              '100%': { backgroundColor: 'rgba(16, 124, 16, 0)' }
+            },
+            flashRed: {
+              '0%': { backgroundColor: 'rgba(209, 52, 56, 0)' },
+              '10%': { backgroundColor: 'rgba(209, 52, 56, 0.3)' },
+              '100%': { backgroundColor: 'rgba(209, 52, 56, 0)' }
+            }
+          },
+          boxShadow: {
+            'fluent': '0 4px 24px rgba(0, 0, 0, 0.4), 0 0 2px rgba(255, 255, 255, 0.1) inset',
+            'fluent-hover': '0 8px 32px rgba(0, 0, 0, 0.5), 0 0 4px rgba(255, 255, 255, 0.2) inset',
+            'glow-blue': '0 0 20px rgba(0, 120, 212, 0.4)',
+            'glow-red': '0 0 30px rgba(209, 52, 56, 0.5)',
+          }
+        }
+      }
+    }
+  </script>
+<script type="importmap">
+{
+  "imports": {
+    "rxjs": "https://esm.sh/rxjs@^7.8.2?conditions=es2015",
+    "rxjs/operators": "https://esm.sh/rxjs@^7.8.2/operators?conditions=es2015",
+    "@angular/core": "https://esm.sh/@angular/core@^21.1.0?external=rxjs",
+    "@angular/common": "https://esm.sh/@angular/common@^21.1.0?external=rxjs",
+    "@angular/forms": "https://esm.sh/@angular/forms@^21.1.0?external=rxjs",
+    "@google/genai": "https://esm.sh/@google/genai@^1.37.0?external=rxjs",
+    "@angular/platform-browser": "https://esm.sh/@angular/platform-browser@^21.1.0?external=rxjs",
+    "@angular/compiler": "https://esm.sh/@angular/compiler@^21.1.0?external=rxjs"
+  }
+}
+</script>
+<style>
+  body {
+    background: #000;
+    overflow-x: hidden;
+    color: #fff;
+  }
+  
+  /* Fluent Acrylic Card */
+  .fluent-card {
+    background: rgba(20, 20, 20, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .scan-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(to right, transparent, #0078D4, transparent);
+    opacity: 0.5;
+    animation: scan 3s linear infinite;
+    z-index: 50;
+    pointer-events: none;
+  }
+
+  /* Custom Scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+  }
+</style>
+</head>
+<body class="selection:bg-ms-blue selection:text-white">
+  <app-root></app-root>
+</body>
+</html>

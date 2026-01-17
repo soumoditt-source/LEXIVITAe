@@ -1,0 +1,8 @@
+{
+  "name": "LexiVitae AI - Fullstack Shinobi",
+  "description": "Production-grade AI Viva Examiner powered by Google Gemini.",
+  "requestFramePermissions": [
+    "microphone",
+    "camera"
+  ]
+}
