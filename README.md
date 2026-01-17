@@ -1,8 +1,8 @@
 # ⚔️ LexiVitae AI: The Autonomous Viva Examiner
-> **Team:** Fullstack Shinobi | **Status:** Production Release (v3.1)
+> **Team:** Fullstack Shinobi | **Status:** Production Release (v3.2)
 
-![Status](https://img.shields.io/badge/Status-Production_Ready-success?style=for-the-badge)
-![Responsiveness](https://img.shields.io/badge/UI-Mobile_to_4K-purple?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Live_Production-success?style=for-the-badge)
+![UI](https://img.shields.io/badge/UI-Responsive_Dual_Mode-purple?style=for-the-badge)
 ![AI](https://img.shields.io/badge/AI-Gemini_2.5_Flash-blue?style=for-the-badge)
 ![Framework](https://img.shields.io/badge/Frontend-Angular_19_Zoneless-red?style=for-the-badge)
 
@@ -14,6 +14,7 @@ LexiVitae is a **Zero-Shot AI Proctor & Examiner** designed to automate oral ass
 ### 🌟 Key Capabilities
 *   **🧠 Semantic RAG Engine:** Generates deep "Why" and "How" questions from uploaded PDFs using Gemini 2.5 Flash (1M Context).
 *   **🗣️ Dual-Mode Interview:** 
+    *   **High-Contrast Toggle:** Switch seamlessly between "Type" and "Voice".
     *   **Voice Mode:** Continuous Speech-to-Text with a "Jarvis" visualizer.
     *   **Keyboard Mode:** Standard text input for precision.
 *   **👁️ Shinobi Proctor:** Client-side TensorFlow.js vision detects forbidden objects (Phones/Books) and tab switching.

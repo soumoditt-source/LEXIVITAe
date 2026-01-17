@@ -44,7 +44,7 @@ import { FormsModule } from '@angular/forms';
 
       <!-- RESPONSIVE HEADER GRID -->
       <div class="grid grid-cols-12 gap-3 mb-4 md:mb-6 z-20">
-        <!-- Question Badge (Full width mobile, left col desktop) -->
+        <!-- Question Badge -->
         <div class="col-span-8 md:col-span-9 lg:col-span-9 fluent-card px-3 md:px-5 py-2 md:py-3 rounded-xl flex items-center gap-3 md:gap-4 border-l-4 border-ms-blue">
            <div class="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-gradient-to-br from-ms-blue to-blue-800 shadow-lg flex items-center justify-center font-bold text-white text-lg md:text-xl font-heading">
              {{ viva.currentQuestion().id }}
@@ -63,7 +63,7 @@ import { FormsModule } from '@angular/forms';
            </div>
         </div>
 
-        <!-- Camera (Small right col mobile, right col desktop) -->
+        <!-- Camera -->
         <div class="col-span-4 md:col-span-3 lg:col-span-3 relative h-14 md:h-32 bg-black rounded-lg overflow-hidden border border-white/10 shadow-lg group transition-all duration-300 hover:scale-105 hover:shadow-glow-blue z-30 hover:border-ms-blue hover:z-50">
              <video #videoElement autoplay playsinline muted class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"></video>
              <div class="absolute top-1 md:top-2 left-1 md:left-2 flex items-center gap-1 bg-black/50 px-1 md:px-1.5 py-0.5 rounded backdrop-blur-sm">
@@ -74,7 +74,7 @@ import { FormsModule } from '@angular/forms';
       </div>
 
       <!-- MAIN INTERFACE -->
-      <div class="flex-1 fluent-card rounded-2xl md:rounded-[2.5rem] p-4 md:p-12 mb-2 md:mb-4 relative overflow-y-auto custom-scrollbar flex flex-col shadow-fluent border-t border-white/10"
+      <div class="flex-1 fluent-card rounded-2xl md:rounded-[2.5rem] p-4 md:p-8 lg:p-12 mb-2 md:mb-4 relative overflow-y-auto custom-scrollbar flex flex-col shadow-fluent border-t border-white/10"
            [class.border-success]="viva.feedbackState() === 'CORRECT'"
            [class.border-danger]="viva.feedbackState() === 'INCORRECT'">
         
@@ -91,7 +91,7 @@ import { FormsModule } from '@angular/forms';
                 </div>
             </div>
 
-            <h2 class="text-xl md:text-3xl lg:text-5xl font-bold text-white text-center leading-tight drop-shadow-xl mb-6 md:mb-10 font-heading">
+            <h2 class="text-xl md:text-3xl lg:text-4xl font-bold text-white text-center leading-tight drop-shadow-xl mb-6 md:mb-10 font-heading">
                {{ viva.currentQuestion().question }}
             </h2>
             
@@ -139,77 +139,95 @@ import { FormsModule } from '@angular/forms';
                 @else {
                     <div class="fluent-card bg-black/40 rounded-2xl md:rounded-3xl border border-white/20 shadow-2xl relative overflow-hidden transition-all duration-300">
                         
-                        <!-- Input Mode Toggles -->
-                        <div class="flex border-b border-white/10 bg-black/20">
-                            <button (click)="setInputMode('KEYBOARD')" class="flex-1 py-3 text-[10px] md:text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-colors hover:bg-white/5 active:bg-white/10"
-                                [class.text-ms-blue]="inputMode() === 'KEYBOARD'"
-                                [class.text-gray-500]="inputMode() !== 'KEYBOARD'"
-                                [class.bg-white_5]="inputMode() === 'KEYBOARD'">
-                                <span class="material-icons text-base">keyboard</span> Type
-                            </button>
-                            <div class="w-px bg-white/10"></div>
-                            <button (click)="setInputMode('VOICE')" class="flex-1 py-3 text-[10px] md:text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-colors hover:bg-white/5 active:bg-white/10"
-                                [class.text-ms-blue]="inputMode() === 'VOICE'"
-                                [class.text-gray-500]="inputMode() !== 'VOICE'"
-                                [class.bg-white_5]="inputMode() === 'VOICE'">
-                                <span class="material-icons text-base">mic</span> Voice
-                            </button>
+                        <!-- HIGH VISIBILITY SEGMENTED CONTROL -->
+                        <div class="p-2 bg-black/40 border-b border-white/10">
+                            <div class="relative flex w-full bg-white/5 p-1 rounded-xl">
+                                <!-- Active Slider Background -->
+                                <div class="absolute inset-y-1 bg-ms-blue rounded-lg shadow-lg transition-all duration-300 ease-out w-[49%]"
+                                     [style.left]="inputMode() === 'KEYBOARD' ? '0.5%' : '50.5%'"></div>
+
+                                <button (click)="setInputMode('KEYBOARD')" 
+                                        class="flex-1 relative z-10 py-3 text-xs md:text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors duration-300"
+                                        [class.text-white]="inputMode() === 'KEYBOARD'"
+                                        [class.text-white_50]="inputMode() !== 'KEYBOARD'">
+                                    <span class="material-icons text-base md:text-lg">keyboard</span> 
+                                    <span>Keyboard</span>
+                                </button>
+
+                                <button (click)="setInputMode('VOICE')" 
+                                        class="flex-1 relative z-10 py-3 text-xs md:text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors duration-300"
+                                        [class.text-white]="inputMode() === 'VOICE'"
+                                        [class.text-white_50]="inputMode() !== 'VOICE'">
+                                    <span class="material-icons text-base md:text-lg">mic</span> 
+                                    <span>Voice Input</span>
+                                </button>
+                            </div>
                         </div>
 
                         <!-- Content Area -->
-                        <div class="relative min-h-[180px] md:min-h-[220px]">
+                        <div class="relative min-h-[220px] md:min-h-[260px]">
                             
                             <!-- KEYBOARD MODE -->
                             @if (inputMode() === 'KEYBOARD') {
-                                <textarea #answerInput [(ngModel)]="textInput" (keydown.enter.prevent)="submitText()"
-                                    [placeholder]="viva.currentQuestion().type === 'PARAGRAPH' ? 'Explain your reasoning in detail...' : 'Type your answer...'"
-                                    class="w-full h-[180px] md:h-[220px] bg-transparent border-none outline-none text-white placeholder-white/20 font-sans text-base md:text-xl p-4 md:p-6 resize-none custom-scrollbar leading-relaxed animate-fade-in"
-                                    [disabled]="isProcessing()"></textarea>
+                                <div class="absolute inset-0 p-1 animate-fade-in">
+                                    <textarea #answerInput [(ngModel)]="textInput" (keydown.enter.prevent)="submitText()"
+                                        [placeholder]="viva.currentQuestion().type === 'PARAGRAPH' ? 'Explain your reasoning in detail...' : 'Type your answer...'"
+                                        class="w-full h-full bg-transparent border-none outline-none text-white placeholder-white/20 font-sans text-base md:text-lg p-4 md:p-6 resize-none custom-scrollbar leading-relaxed"
+                                        [disabled]="isProcessing()"></textarea>
+                                </div>
                             }
 
                             <!-- VOICE MODE -->
                             @if (inputMode() === 'VOICE') {
-                                <div class="absolute inset-0 flex flex-col items-center justify-center animate-fade-in p-4 md:p-6">
+                                <div class="absolute inset-0 flex flex-col items-center justify-center animate-fade-in p-4 md:p-6 bg-gradient-to-b from-transparent to-black/20">
                                     
                                     <!-- Transcript View -->
-                                    <div class="w-full text-center mb-6 md:mb-8 h-20 md:h-24 overflow-y-auto custom-scrollbar flex items-center justify-center">
+                                    <div class="w-full text-center mb-6 md:mb-8 h-24 overflow-y-auto custom-scrollbar flex items-center justify-center px-4">
                                         @if (!textInput) {
-                                            <span class="text-white/20 text-base md:text-lg font-light">Tap the microphone and speak...</span>
+                                            <div class="flex flex-col items-center gap-2 text-white/30 animate-pulse">
+                                                <span class="material-icons text-3xl">graphic_eq</span>
+                                                <span class="text-base font-light">Tap the mic & speak clearly...</span>
+                                            </div>
                                         } @else {
-                                            <span class="text-white text-lg md:text-xl font-medium leading-relaxed">"{{ textInput }}"</span>
+                                            <span class="text-white text-lg md:text-2xl font-medium leading-relaxed drop-shadow-md">"{{ textInput }}"</span>
                                         }
                                     </div>
 
-                                    <!-- Mic Button -->
+                                    <!-- Mic Button (Large Target) -->
                                     <button (click)="toggleRecording()" 
-                                        class="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center transition-all duration-300 shadow-lg relative group active:scale-95"
+                                        class="w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center transition-all duration-300 shadow-xl relative group active:scale-95 border-4"
                                         [class.bg-danger]="isListening()"
+                                        [class.border-red-400]="isListening()"
                                         [class.shadow-glow-red]="isListening()"
                                         [class.bg-white_10]="!isListening()"
+                                        [class.border-white_10]="!isListening()"
                                         [class.hover-bg-white_20]="!isListening()">
                                         
                                         @if(isListening()) {
-                                            <div class="absolute inset-0 rounded-full border border-danger opacity-50 animate-[ping_1.5s_infinite]"></div>
-                                            <div class="absolute inset-0 rounded-full border border-danger opacity-30 animate-[ping_2s_infinite]"></div>
+                                            <div class="absolute inset-0 rounded-full border-2 border-danger opacity-50 animate-[ping_1.5s_infinite]"></div>
                                         }
                                         
-                                        <span class="material-icons text-2xl md:text-3xl" [class.text-white]="isListening()" [class.text-gray-400]="!isListening()">
+                                        <span class="material-icons text-3xl md:text-5xl" [class.text-white]="isListening()" [class.text-gray-400]="!isListening()">
                                             {{ isListening() ? 'stop' : 'mic' }}
                                         </span>
                                     </button>
                                     
-                                    <div class="mt-4 text-[9px] md:text-[10px] text-gray-500 font-mono uppercase tracking-widest">
-                                        {{ isListening() ? 'Listening... Tap to Stop' : 'Ready' }}
+                                    <div class="mt-4 text-[10px] md:text-xs text-gray-400 font-mono uppercase tracking-widest bg-black/40 px-3 py-1 rounded-full border border-white/5">
+                                        {{ isListening() ? '● Recording Active' : 'Ready to Record' }}
                                     </div>
                                 </div>
                             }
                         </div>
 
                         <!-- Footer Actions -->
-                        <div class="flex justify-end items-center p-3 md:p-4 border-t border-white/10 bg-black/20">
+                        <div class="flex justify-between items-center p-3 md:p-4 border-t border-white/10 bg-black/40 backdrop-blur-md">
+                            <div class="text-[10px] text-gray-500 font-mono hidden md:block">
+                                {{ inputMode() === 'KEYBOARD' ? 'PRESS ENTER TO SUBMIT' : 'SPEAK CLEARLY' }}
+                            </div>
+
                             <button (click)="submitText()" [disabled]="!textInput.trim() || isProcessing()"
-                                class="px-6 md:px-8 py-3 rounded-xl bg-ms-blue text-white font-bold hover:bg-ms-blue-hover disabled:opacity-50 disabled:cursor-not-allowed shadow-lg transition-all active:scale-95 flex items-center gap-2 group text-sm md:text-base w-full md:w-auto justify-center">
-                                <span>SUBMIT ANSWER</span>
+                                class="px-8 md:px-12 py-3 md:py-4 rounded-xl bg-ms-blue text-white font-bold hover:bg-ms-blue-hover disabled:opacity-50 disabled:cursor-not-allowed shadow-lg transition-all active:scale-95 flex items-center gap-3 group text-sm md:text-base w-full md:w-auto justify-center">
+                                <span>SUBMIT</span>
                                 <span class="material-icons text-sm group-hover:translate-x-1 transition-transform">send</span>
                             </button>
                         </div>
@@ -311,10 +329,16 @@ export class InterviewComponent implements AfterViewInit, OnDestroy {
       this.recognition.onend = () => {
           if (this.isListening()) { try { this.recognition.start(); } catch(e) { this.isListening.set(false); } }
       };
+    } else {
+        console.warn("Speech recognition not supported in this browser.");
     }
   }
 
   toggleRecording() {
+      if (!this.recognition) {
+          alert("Voice input is only supported in Chrome/Edge.");
+          return;
+      }
       if (this.isListening()) {
           this.isListening.set(false);
           this.recognition.stop();
