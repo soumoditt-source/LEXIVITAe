@@ -1,92 +1,53 @@
 # ⚔️ LexiVitae AI: The Autonomous Viva Examiner
-> **Team:** Fullstack Shinobi | **Event:** Kshitij 2026 Round 1 Winner
+> **Team:** Fullstack Shinobi | **Status:** Production Release (v3.1)
 
 ![Status](https://img.shields.io/badge/Status-Production_Ready-success?style=for-the-badge)
+![Responsiveness](https://img.shields.io/badge/UI-Mobile_to_4K-purple?style=for-the-badge)
 ![AI](https://img.shields.io/badge/AI-Gemini_2.5_Flash-blue?style=for-the-badge)
 ![Framework](https://img.shields.io/badge/Frontend-Angular_19_Zoneless-red?style=for-the-badge)
-![Deployment](https://img.shields.io/badge/Deploy-Vercel_Edge-black?style=for-the-badge)
 
-## 📖 The Problem
-Traditional oral examinations (vivas) suffer from:
-1.  **Subjectivity:** Bias based on the examiner's mood.
-2.  **Scalability:** Impossible to viva 500+ students in one day manually.
-3.  **Fatigue:** Human examiners lose precision after hour 2.
+## 📖 Overview
+LexiVitae is a **Zero-Shot AI Proctor & Examiner** designed to automate oral assessments (Viva Voce) at scale. It ingests research papers or textbooks (PDF) and conducts a rigorous, voice-interactive interview in real-time.
 
-## 💡 The Solution: LexiVitae
-LexiVitae is a **Zero-Shot AI Proctor & Examiner**. It ingests *any* raw research paper or textbook (PDF) and conducts a rigorous, semantic-grade oral interview in real-time.
+**Now fully responsive across all devices (iOS, Android, Mac, Windows).**
 
 ### 🌟 Key Capabilities
-*   **🧠 Semantic RAG Engine:** Doesn't just keyword match. It understands the *logic* of the uploaded PDF to ask "Why" and "How" questions.
-*   **🗣️ Bi-Directional Voice Core:**
-    *   **TTS:** Multi-tonal examiner voice (Empathetic for low scores, Strict for high scores).
-    *   **STT:** Continuous, long-form speech recognition for detailed student answers.
-*   **👁️ Shinobi Proctor:** Client-side TensorFlow.js vision detects:
-    *   Multiple faces.
-    *   Forbidden objects (Phones/Books).
-    *   Tab switching.
-*   **🎯 Adaptive Difficulty:**
-    *   **Standard:** MCQs & Definitions.
-    *   **Extreme:** Open-ended synthesis questions with strict grading.
+*   **🧠 Semantic RAG Engine:** Generates deep "Why" and "How" questions from uploaded PDFs using Gemini 2.5 Flash (1M Context).
+*   **🗣️ Dual-Mode Interview:** 
+    *   **Voice Mode:** Continuous Speech-to-Text with a "Jarvis" visualizer.
+    *   **Keyboard Mode:** Standard text input for precision.
+*   **👁️ Shinobi Proctor:** Client-side TensorFlow.js vision detects forbidden objects (Phones/Books) and tab switching.
+*   **📱 Adaptive UI:** Liquid layout that adjusts to any screen size or orientation.
 
 ## 🏗️ Architecture
-
-```mermaid
-graph TD
-    A[User PDF] -->|PDF.js Extraction| B(Client Context Window)
-    B -->|Gemini 2.5 API| C{AI Agent Layer}
-    C -->|Generate Question| D[Frontend UI]
-    D -->|User Voice/Text| E[Answer]
-    E -->|TensorFlow Vision Check| F{Integrity Gate}
-    F -->|Pass| G[Gemini Grader]
-    G -->|JSON Score + Advice| H[Feedback Loop]
-    H -->|Update State| C
-```
+1.  **Ingestion:** PDF.js extracts text client-side.
+2.  **Context Analysis:** Gemini 2.5 analyzes the document to build a semantic map.
+3.  **Interview Loop:** 
+    *   Question Generation (Adaptive based on previous score).
+    *   User Answer (Voice/Text).
+    *   Proctor Check (TensorFlow.js).
+    *   Grading (0-10 Score + Advice).
+4.  **Reporting:** Generates an Excel transcript and Management Summary.
 
 ## 🛠️ Tech Stack
+*   **Frontend:** Angular 19+ (Zoneless)
+*   **AI Model:** Google Gemini 2.5 Flash
+*   **Vision:** TensorFlow.js (COCO-SSD)
+*   **Styling:** Tailwind CSS (Fluent Design)
+*   **Deployment:** Vercel Edge / Netlify
 
-| Domain | Technology | Why? |
-| :--- | :--- | :--- |
-| **Frontend** | Angular 19+ (Zoneless) | Maximum performance, no digest cycle overhead. |
-| **AI Model** | Google Gemini 2.5 Flash | 1M context window allows full textbook ingestion. |
-| **Vision** | TensorFlow.js (COCO-SSD) | Privacy-first, edge-based proctoring (no video upload). |
-| **Styling** | Tailwind CSS | "Glassmorphism" Fluent UI design. |
-| **Voice** | Web Speech API | Native browser support, zero-latency. |
+## 🚀 Deployment Instructions
 
-## 🚀 Local Installation
-
-1.  **Clone the Repository**
-    ```bash
-    git clone https://github.com/fullstack-shinobi/lexivitae.git
-    cd lexivitae
-    ```
-
-2.  **Install Dependencies**
-    ```bash
-    npm install
-    ```
-
-3.  **Configure Environment**
-    *   Create a `.env` file (or set system env variables).
-    *   `API_KEY=your_google_gemini_api_key`
-
-4.  **Run Application**
-    ```bash
-    npm start
-    ```
-    Navigate to `http://localhost:4200`.
-
-## ☁️ Vercel Deployment
-
-1.  Push to GitHub.
+### Option 1: Vercel (Recommended)
+1.  Clone this repository.
 2.  Import to Vercel.
-3.  **CRITICAL:** In Vercel Settings > Environment Variables, add `API_KEY`.
+3.  Add Environment Variable: `API_KEY` (Your Google Gemini API Key).
 4.  Deploy.
 
-## 🏆 Credits
-**Architected by:** Fullstack Shinobi
-*   **Lead Engineer:** Soumoditya Das
-*   **AI Logic:** Gemini 2.5 Prompt Engineering
-*   **UX Design:** Microsoft Fluent System
+### Option 2: Local Development
+1.  `npm install`
+2.  Create `.env` or set `API_KEY` in your environment.
+3.  `npm start` -> Open `http://localhost:4200`
 
 ---
-*Built for Kshitij 2026. This software is strictly for educational assessment benchmarking.*
+*Built for High-Stakes Assessments.*
